@@ -1,0 +1,316 @@
+import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * THE SASSY TEXT DETECTIVE v3.2
+ * A text analysis tool that roasts your writing while analyzing it.
+ */
+public class Sasytextdetective {
+
+    private static final Scanner SCANNER = new Scanner(System.in);
+
+    // Sassy responses
+    private static final String[] SHORT_ROASTS = {
+        "That's it? My grocery list is longer than this!",
+        "Did you run out of keyboard?",
+        "I've seen tweets with more substance.",
+        "Is this a haiku that forgot it was a haiku?"
+    };
+
+    private static final String[] MEDIUM_ROASTS = {
+        "Not bad, but Shakespeare is shaking in his grave.",
+        "Decent effort. Could use more dragons though.",
+        "I've read instruction manuals more exciting.",
+        "Mid. Just mid."
+    };
+
+    private static final String[] LONG_ROASTS = {
+        "Whoa there, Tolstoy! You trying to write a novel?",
+        "My eyes are tired just LOOKING at this length!",
+        "Is this your autobiography? Because it's LONG.",
+        "Someone's got a lot of feelings to process..."
+    };
+
+    public static void main(String[] args) {
+        printBanner();
+
+        String text = getUserText();
+
+        if (!isValidInput(text)) {
+            System.out.println("\nDETECTIVE ALERT: You gave me NOTHING to work with!");
+            System.out.println("   Even a blank page has more content than this.");
+            System.out.println("   Try again, but this time... actually type something?");
+            return;
+        }
+
+        System.out.println("\nANALYSIS IN PROGRESS... Please hold my coffee.\n");
+
+        analyzeCharacterCount(text);
+        analyzeWordCount(text);
+        findMostCommonCharacter(text);
+        analyzeCharacterFrequency(text);
+        analyzeWordFrequency(text);
+        analyzeUniqueWords(text);
+
+        giveFinalVerdict(text);
+    }
+
+    /**
+     * Prints a clean block character banner that clearly reads SASSY
+     */
+    private static void printBanner() {
+        System.out.println("=============================================================");
+        System.out.println();
+        System.out.println(" ██████   █████   ██████   ██████  ██    ██");
+        System.out.println("██       ██   ██  ██       ██       ██    ██");
+        System.out.println(" ██████  ███████   █████    █████   ████████");
+        System.out.println("      ██ ██   ██       ██       ██  ██    ██");
+        System.out.println("███████  ██   ██  ██████  ██████   ██    ██");
+        System.out.println();
+        System.out.println("         THE TEXT DETECTIVE v3.2");
+        System.out.println("         Detective Agency");
+        System.out.println("         We read so you do not have to");
+        System.out.println("=============================================================");
+        System.out.println();
+        System.out.println("Welcome, brave writer! Prepare to have your text dissected,");
+        System.out.println("analyzed, and lightly roasted by yours truly.");
+        System.out.println();
+    }
+
+    private static String getUserText() {
+        System.out.println("CASE FILE: Please enter your text for investigation:");
+        System.out.println("   (Type your text and press ENTER when done)");
+        System.out.println("   --------------------------------------------------------");
+        System.out.println("   [Type your text. Enter 'DONE' on a new line to finish]");
+        System.out.println();
+
+        StringBuilder textBuilder = new StringBuilder();
+        String line;
+
+        while (SCANNER.hasNextLine()) {
+            line = SCANNER.nextLine();
+            if (line.trim().equalsIgnoreCase("DONE")) {
+                break;
+            }
+            textBuilder.append(line).append("\n");
+        }
+
+        return textBuilder.toString().trim();
+    }
+
+    private static boolean isValidInput(String text) {
+        return text != null && !text.trim().isEmpty();
+    }
+
+    private static void analyzeCharacterCount(String text) {
+        int charCount = text.length();
+
+        System.out.println("EVIDENCE #1: Character Count");
+        System.out.println("   Total characters (including spaces): " + charCount);
+
+        if (charCount < 50) {
+            System.out.println("   >> " + getRandomRoast(SHORT_ROASTS));
+        } else if (charCount < 500) {
+            System.out.println("   >> " + getRandomRoast(MEDIUM_ROASTS));
+        } else {
+            System.out.println("   >> " + getRandomRoast(LONG_ROASTS));
+        }
+        System.out.println();
+    }
+
+    private static void analyzeWordCount(String text) {
+        String[] words = text.trim().split("\s+");
+        int wordCount = words.length;
+
+        System.out.println("EVIDENCE #2: Word Count");
+        System.out.println("   Total words: " + wordCount);
+
+        if (wordCount == 1) {
+            System.out.println("   >> One word? ONE? Are you a caveman?");
+        } else if (wordCount < 10) {
+            System.out.println("   >> Brief and... uh... brief. That is a word, right?");
+        } else if (wordCount > 1000) {
+            System.out.println("   >> OVER 1000 WORDS?! Do you get paid by the word?");
+        } else {
+            System.out.println("   >> A respectable word count. Your English teacher would be... okay with this.");
+        }
+        System.out.println();
+    }
+
+    private static void findMostCommonCharacter(String text) {
+        Map<Character, Integer> charFreq = new HashMap<>();
+
+        for (char c : text.toLowerCase().toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                charFreq.put(c, charFreq.getOrDefault(c, 0) + 1);
+            }
+        }
+
+        char mostCommon = ' ';
+        int maxCount = 0;
+
+        for (Map.Entry<Character, Integer> entry : charFreq.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostCommon = entry.getKey();
+            }
+        }
+
+        System.out.println("EVIDENCE #3: Most Common Character");
+        if (maxCount > 0) {
+            System.out.println("   The character '" + mostCommon + "' appears " + maxCount + " times.");
+
+            if (mostCommon == 'e') {
+                System.out.println("   >> 'E' again? How original. It is like the most common letter in English.");
+            } else if (mostCommon == 'a') {
+                System.out.println("   >> 'A' - the first letter of the alphabet AND your favorite, apparently.");
+            } else if (mostCommon == 'x') {
+                System.out.println("   >> 'X'? Are you writing a treasure map or something?");
+            } else if (mostCommon == 'z') {
+                System.out.println("   >> 'Z'? You are either sleeping a lot or you are a zebra.");
+            } else {
+                System.out.println("   >> '" + Character.toUpperCase(mostCommon) + "' is your MVP character. Give it a trophy.");
+            }
+        } else {
+            System.out.println("   >> No letters found. Did you type in hieroglyphics?");
+        }
+        System.out.println();
+    }
+
+    private static void analyzeCharacterFrequency(String text) {
+        System.out.println("INVESTIGATION: Character Frequency Check");
+        System.out.print("   Enter a character to investigate: ");
+
+        String input = SCANNER.nextLine().trim();
+
+        if (input.isEmpty()) {
+            System.out.println("   >> You did not enter anything. My psychic powers are at lunch.");
+            System.out.println();
+            return;
+        }
+
+        char targetChar = Character.toLowerCase(input.charAt(0));
+        int count = 0;
+
+        for (char c : text.toLowerCase().toCharArray()) {
+            if (c == targetChar) {
+                count++;
+            }
+        }
+
+        System.out.println("   The character '" + targetChar + "' appears " + count + " time(s).");
+
+        if (count == 0) {
+            System.out.println("   >> Zero? Zilch? Nada? This character is ghosting your text.");
+        } else if (count == 1) {
+            System.out.println("   >> Just one lonely appearance. It is the solo artist of your text.");
+        } else if (count > 20) {
+            System.out.println("   >> OVER " + count + " TIMES?! This character is basically the main character now.");
+        } else {
+            System.out.println("   >> A solid presence. Not too clingy, not too distant.");
+        }
+        System.out.println();
+    }
+
+    private static void analyzeWordFrequency(String text) {
+        System.out.println("INVESTIGATION: Word Frequency Check");
+        System.out.print("   Enter a word to investigate: ");
+
+        String targetWord = SCANNER.nextLine().trim().toLowerCase();
+
+        if (targetWord.isEmpty()) {
+            System.out.println("   >> Empty word? That is like asking me to find invisible unicorns.");
+            System.out.println();
+            return;
+        }
+
+        String[] words = text.toLowerCase().split("[^a-zA-Z0-9']+");
+        int count = 0;
+
+        for (String word : words) {
+            if (word.equals(targetWord)) {
+                count++;
+            }
+        }
+
+        System.out.println("   The word \"" + targetWord + "\" appears " + count + " time(s).");
+
+        if (count == 0) {
+            System.out.println("   >> Never used. This word is not in your vocabulary, apparently.");
+        } else if (count == 1) {
+            System.out.println("   >> Used once. A cameo appearance!");
+        } else if (count > 10) {
+            System.out.println("   >> " + count + " times?! Do you know any OTHER words?");
+        } else {
+            System.out.println("   >> A reasonable amount. Your thesaurus thanks you.");
+        }
+        System.out.println();
+    }
+
+    private static void analyzeUniqueWords(String text) {
+        String[] words = text.toLowerCase().split("[^a-zA-Z0-9']+");
+        Map<String, Integer> uniqueWords = new HashMap<>();
+
+        for (String word : words) {
+            if (!word.trim().isEmpty()) {
+                uniqueWords.put(word, uniqueWords.getOrDefault(word, 0) + 1);
+            }
+        }
+
+        int uniqueCount = uniqueWords.size();
+        int totalWords = words.length;
+        double diversity = totalWords > 0 ? (double) uniqueCount / totalWords * 100 : 0;
+
+        System.out.println("EVIDENCE #4: Unique Words Analysis");
+        System.out.println("   Total unique words: " + uniqueCount);
+        System.out.println("   Vocabulary diversity: " + String.format("%.1f", diversity) + "%");
+
+        if (diversity < 30) {
+            System.out.println("   >> Oof. You really like repeating yourself, huh?");
+        } else if (diversity < 60) {
+            System.out.println("   >> Decent variety. Could use more fancy words though.");
+        } else {
+            System.out.println("   >> Impressive vocabulary! Did you swallow a dictionary?");
+        }
+        System.out.println();
+    }
+
+    private static void giveFinalVerdict(String text) {
+        System.out.println("=============================================================");
+        System.out.println("                    FINAL VERDICT");
+        System.out.println("=============================================================");
+
+        int wordCount = text.trim().split("\s+").length;
+
+        if (wordCount < 10) {
+            System.out.println("   VERDICT: TEXTUAL CRIME SCENE");
+            System.out.println("   This text is so short, it is basically a text message from 2005.");
+            System.out.println("   Sentence: Write more. Like, a LOT more.");
+        } else if (wordCount < 100) {
+            System.out.println("   VERDICT: AVERAGE JOE TEXT");
+            System.out.println("   Not terrible, not amazing. Like vanilla ice cream.");
+            System.out.println("   Sentence: Keep practicing, young padawan.");
+        } else if (wordCount < 500) {
+            System.out.println("   VERDICT: RESPECTABLE EFFORT");
+            System.out.println("   You have got potential! Your text has substance AND style.");
+            System.out.println("   Sentence: You are officially promoted to 'Adequate Writer'.");
+        } else {
+            System.out.println("   VERDICT: EPIC SAGA");
+            System.out.println("   This is a NOVEL. Are you sure you are not hiding a book deal?");
+            System.out.println("   Sentence: Published author status: PENDING");
+        }
+
+        System.out.println("=============================================================");
+        System.out.println();
+        System.out.println("   Thank you for using The Sassy Text Detective!");
+        System.out.println("   Remember: Every word you write is a step toward world domination.");
+        System.out.println("   Or at least a passing grade. ;-)");
+        System.out.println("=============================================================");
+    }
+
+    private static String getRandomRoast(String[] roasts) {
+        int index = (int) (Math.random() * roasts.length);
+        return roasts[index];
+    }
+}
